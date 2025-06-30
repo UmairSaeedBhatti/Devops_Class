@@ -60,7 +60,7 @@ jobs:
         with:
           app-name: UmairFlaskApp
           publish-profile: ${{secrets.AZURE_USERNAME}}
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{github.sha}}
+          images: '${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{github.sha}}'
 
 
  
