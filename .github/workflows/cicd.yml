@@ -54,4 +54,13 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{github.sha}} .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{github.sha}}
+
+      - name: Deploye to Azure Web App
+        uses: azure/webapps0deploy@v2
+        with:
+          app-name: UmairFlaskApp
+          publish-profile: ${{secrets.AZURE_USERNAME}}
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{github.sha}}
+
+
  
