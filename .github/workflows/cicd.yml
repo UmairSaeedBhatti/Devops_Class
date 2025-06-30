@@ -33,5 +33,18 @@ jobs:
           flake8 FlaskWebProject1/ runserver.py --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
  
       - name: Run Tests
+        run: pytest --maxfail=1 --disable-warnings -q
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t umairsaeedbhatti/devops-app:latest .
+
+      - name: Push Docker image
+        run: docker push umairsaeedbhatti/devops-app:latest
+
+      - name: Tag and Push Docker image with version
         run: |
-          pytest --maxfail=1 --disable-warnings -q
+          docker tag umairsaeedbhatti/devops-app:latest umairsaeedbhatti/devops-app:${{ github.sha }}
+          docker push umairsaeedbhatti/devops-app:${{ github.sha }}
