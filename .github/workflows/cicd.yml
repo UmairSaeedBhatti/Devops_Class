@@ -52,6 +52,6 @@ jobs:
  
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/Devops_Class:${{github.sha}} .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/Devops_Class:${{github.sha}}
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{github.sha}} .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{github.sha}}
  
