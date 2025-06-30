@@ -1,4 +1,4 @@
-name: devops app
+name: Devops_Class
  
 on:
   push:
@@ -29,22 +29,31 @@ jobs:
  
       - name: Lint check
         run: |
-          flake8 FlaskWebProject1/ runserver.py --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 FlaskWebProject1/ runserver.py --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
  
       - name: Run Tests
-        run: pytest --maxfail=1 --disable-warnings -q
-
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-
-      - name: Build Docker image
-        run: docker build -t umairsaeedbhatti/devops-app:latest .
-
-      - name: Push Docker image
-        run: docker push umairsaeedbhatti/devops-app:latest
-
-      - name: Tag and Push Docker image with version
         run: |
-          docker tag umairsaeedbhatti/devops-app:latest umairsaeedbhatti/devops-app:${{ github.sha }}
-          docker push umairsaeedbhatti/devops-app:${{ github.sha }}
+          pytest --maxfail=1 --disable-warnings -q
+ 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+ 
+    steps:
+      - name: Check out branches
+        uses: actions/checkout@v4
+ 
+      - name: Docker Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME}}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+ 
+      - name: Build Docker Image
+        run: |
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/Devops_Class:${{github.sha}} .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/Devops_Class:${{github.sha}}
+ 
