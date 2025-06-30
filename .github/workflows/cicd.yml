@@ -1,11 +1,11 @@
-name: Devops_Class  # Test: Added test message to trigger workflow
+name: Devops_Class
  
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
- #coment
+ 
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,8 +29,8 @@ jobs:
  
       - name: Lint check
         run: |
-          flake8 FlaskWebProject1/ runserver.py --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 FlaskWebProject1/ runserver.py --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
  
       - name: Run Tests
         run: |
@@ -52,20 +52,14 @@ jobs:
  
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{github.sha}} .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{github.sha}}
-
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_USERNAME }}
-
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/Devops_Class:${{github.sha}} .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/Devops_Class:${{github.sha}}
+ 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: UmairFlaskApp
+          app-name: "UmairFlaskApp"
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/Devops_Class:${{github.sha}}
           publish-profile: ${{ secrets.AZURE_USERNAME }}
-          images: '${{ secrets.DOCKERHUB_USERNAME }}/devops_class:${{ github.sha }}'
-
-
+ 
  
